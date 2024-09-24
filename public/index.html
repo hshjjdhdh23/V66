@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Facebook Bot Creator</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            animation: fadeInUp 1s ease-in-out forwards;
+        }
+
+        .welcome-section, .user-list-section {
+            margin-bottom: 30px;
+            animation: slideIn 1s ease-in-out;
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .welcome-section h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #4a90e2;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .welcome-section .btn {
+            font-size: 16px;
+            padding: 12px 24px;
+            background-color: #4a90e2;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            animation: bounceIn 1s ease-in-out;
+        }
+
+        .welcome-section .btn:hover {
+            background-color: #357abd;
+            transform: translateY(-2px);
+        }
+
+        .user-list-section h1 {
+            font-size: 22px;
+            color: #4a90e2;
+            margin-bottom: 20px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .user-list-section hr {
+            background-color: #4a90e2;
+            border: 0;
+            height: 2px;
+            margin: 20px 0;
+        }
+
+        #user_online {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .user-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid #e1e8ed;
+            border-radius: 8px;
+            padding: 15px;
+            width: 100%;
+            max-width: 180px;
+            background: #ffffff;
+            color: #333;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: fadeInUp 1s ease-in-out;
+        }
+
+        .user-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-card img {
+            max-width: 80px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+            animation: bounceIn 1s ease-in-out;
+            border: 1px solid black;
+            width: 50px;
+            height: 50px;
+        }
+
+        .user-info {
+            text-align: center;
+        }
+
+        .user-name {
+            font-size: 16px;
+            color: #4a90e2;
+            margin-bottom: 5px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .uptime-user {
+            color: #7ed321;
+            font-size: 14px;
+            margin: 0;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @media (max-width: 576px) {
+            .user-card {
+                max-width: 100%;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes bounceIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <h1>Welcome to the Facebook Bot Creator V1!</h1>
+            <a href="login" class="btn">GO TO LOGIN FORM!</a>
+        </div>
+
+        <!-- User List Section -->
+        <div class="user-list-section">
+          <hr>
+            <h1>Current Online</h1>
+            <hr>
+            <div id="user_online"></div>
+        </div>
+    </div>
+
+    <script>
+        async function listOfAi() {
+            const userOnline = document.getElementById("user_online");
+            try {
+                const response = await fetch("/info");
+                const data = await response.json();
+                userOnline.innerHTML = '';
+                data.forEach(user => {
+                    const { name, thumbSrc, time } = user;
+                    const userCard = document.createElement('div');
+                    userCard.className = 'user-card';
+                    const image = document.createElement('img');
+                    image.src = thumbSrc;
+                    image.alt = 'User Thumbnail';
+                    const userInfo = document.createElement('div');
+                    userInfo.className = 'user-info';
+                    const userName = document.createElement('p');
+                    userName.className = 'user-name';
+                    userName.textContent = name;
+                    const uptimeUser = document.createElement('p');
+                    uptimeUser.className = 'uptime-user';
+                    uptimeUser.textContent = `Uptime: ${timeFormat(time)}`;
+                    userInfo.appendChild(userName);
+                    userInfo.appendChild(uptimeUser);
+                    userCard.appendChild(image);
+                    userCard.appendChild(userInfo);
+                    userOnline.appendChild(userCard);
+
+                    const intervalId = setInterval(() => {
+                        user.time++;
+                        updateTimer(userCard, user.time);
+                    }, 1000);
+                });
+            } catch (error) {
+                console.error(error);
+                userOnline.innerHTML = `<div class="alert alert-danger" role="alert">An error occurred while fetching data.</div>`;
+            }
+        }
+
+        function updateTimer(userCard, currentTime) {
+            const uptimeUser = userCard.querySelector('.uptime-user');
+            uptimeUser.textContent = `Uptime: ${timeFormat(currentTime)}`;
+        }
+
+        function timeFormat(currentTime) {
+            const days = Math.floor(currentTime / (3600 * 24));
+            const hours = Math.floor((currentTime % (3600 * 24)) / 3600);
+            const minutes = Math.floor((currentTime % 3600) / 60);
+            const seconds = currentTime % 60;
+
+            let timeFormat = '';
+
+            switch (true) {
+                case days > 0:
+                    timeFormat += `${days} day${days > 1 ? 's' : ''} `;
+                case hours > 0:
+                    timeFormat += `${hours} hour${hours > 1 ? 's' : ''} `;
+                case minutes > 0:
+                    timeFormat += `${minutes} minute${minutes > 1 ? 's' : ''} `;
+                default:
+                    timeFormat += `${seconds} second${seconds > 1 ? 's' : ''}`;
+            }
+
+            return timeFormat.trim();
+        }
+
+        listOfAi();
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+</body>
+</html>
